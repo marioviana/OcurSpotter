@@ -4,6 +4,19 @@ import com.ocurspotter.model.User;
 
 public interface UserDao {
 
-	User findByUserName(String username);
+	/**
+	 * Save.
+	 *
+	 * @param user the user
+	 */
+	void save(User user);
+
+	/**
+	 * Find by username.
+	 *
+	 * @param username the username
+	 * @return the user
+	 */
+	User findByUsername(String username);
 
 }
