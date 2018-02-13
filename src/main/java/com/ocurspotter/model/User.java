@@ -31,6 +31,9 @@ public class User {
 	@Column(name = "enabled")
 	private boolean enabled;
 
+	@Column(name = "avatar")
+	private String avatar;
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
 	private Set<UserRole> userRole = new HashSet<UserRole>(0);
 
@@ -40,29 +43,37 @@ public class User {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
 	private Set<Occurrence> occurrences = new HashSet<Occurrence>(0);
 
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+	private Set<OccurrenceVote> occurrenceVotes = new HashSet<OccurrenceVote>(0);
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+	private Set<SolutionVote> solutionVotes = new HashSet<SolutionVote>(0);
+
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(
+		name = "UserTypes",
+		joinColumns = { @JoinColumn(name = "userId") },
+		inverseJoinColumns = { @JoinColumn(name = "typeId") }
+	)
+	private Set<Type> types = new HashSet<Type>(0);
+
 	public User() {}
 
-	public User(String username, String password, boolean enabled) {
+	public User(String username, String firstName, String lastName, String password, boolean enabled, String avatar,
+		Set<UserRole> userRole, Set<Solution> solutions, Set<Occurrence> occurrences,
+		Set<OccurrenceVote> occurrenceVotes, Set<SolutionVote> solutionVotes, Set<Type> types) {
 		this.username = username;
-		this.password = password;
-		this.enabled = enabled;
-	}
-
-	public User(String username, String password, boolean enabled, String firstName, String lastName) {
-		this.username = username;
-		this.password = password;
-		this.enabled = enabled;
 		this.firstName = firstName;
 		this.lastName = lastName;
-	}
-
-	public User(String username, String password, boolean enabled, String firstName, String lastName, Set<UserRole> userRole) {
-		this.username = username;
 		this.password = password;
 		this.enabled = enabled;
-		this.firstName = firstName;
-		this.lastName = lastName;
+		this.avatar = avatar;
 		this.userRole = userRole;
+		this.solutions = solutions;
+		this.occurrences = occurrences;
+		this.occurrenceVotes = occurrenceVotes;
+		this.solutionVotes = solutionVotes;
+		this.types = types;
 	}
 
 	public Integer getId() { return this.id; }
@@ -93,4 +104,51 @@ public class User {
 
 	public void setUserRole(Set<UserRole> userRole) { this.userRole = userRole; }
 
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
+
+	public Set<Solution> getSolutions() {
+		return solutions;
+	}
+
+	public void setSolutions(Set<Solution> solutions) {
+		this.solutions = solutions;
+	}
+
+	public Set<Occurrence> getOccurrences() {
+		return occurrences;
+	}
+
+	public void setOccurrences(Set<Occurrence> occurrences) {
+		this.occurrences = occurrences;
+	}
+
+	public Set<OccurrenceVote> getOccurrenceVotes() {
+		return occurrenceVotes;
+	}
+
+	public void setOccurrenceVotes(Set<OccurrenceVote> occurrenceVotes) {
+		this.occurrenceVotes = occurrenceVotes;
+	}
+
+	public Set<SolutionVote> getSolutionVotes() {
+		return solutionVotes;
+	}
+
+	public void setSolutionVotes(Set<SolutionVote> solutionVotes) {
+		this.solutionVotes = solutionVotes;
+	}
+
+	public Set<Type> getTypes() {
+		return types;
+	}
+
+	public void setTypes(Set<Type> types) {
+		this.types = types;
+	}
 }

@@ -38,6 +38,9 @@ public class Occurrence {
 	@Column(name = "suggestion")
 	private Boolean suggestion;
 
+	@Column(name = "image")
+	private String image;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "typeId")
 	private Type type;
@@ -49,14 +52,18 @@ public class Occurrence {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "occurrence")
 	private Set<Solution> solutions = new HashSet<Solution>(0);
 
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "occurrence")
+	private Set<OccurrenceVote> votes = new HashSet<OccurrenceVote>(0);
+
 	public Occurrence() {
 	}
 
-	public Occurrence(Long id, String title, String description, Boolean status, Date openDate, Date closeDate, Double latitude, Double longitude, Boolean suggestion, Type type, User user) {
+	public Occurrence(Long id, String title, String description, Boolean status, String image, Date openDate, Date closeDate, Double latitude, Double longitude, Boolean suggestion, Type type, User user) {
 		this.id = id;
 		this.title = title;
 		this.description = description;
 		this.status = status;
+		this.image = image;
 		this.openDate = openDate;
 		this.closeDate = closeDate;
 		this.latitude = latitude;
@@ -152,5 +159,37 @@ public class Occurrence {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public Boolean getStatus() {
+		return status;
+	}
+
+	public void setStatus(Boolean status) {
+		this.status = status;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
+	public Set<Solution> getSolutions() {
+		return solutions;
+	}
+
+	public void setSolutions(Set<Solution> solutions) {
+		this.solutions = solutions;
+	}
+
+	public Set<OccurrenceVote> getVotes() {
+		return votes;
+	}
+
+	public void setVotes(Set<OccurrenceVote> votes) {
+		this.votes = votes;
 	}
 }

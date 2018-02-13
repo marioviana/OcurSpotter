@@ -25,10 +25,10 @@ VALUES ('ocurspotter', 'ROLE_ADMIN');
 INSERT INTO user_roles (username, role)
 VALUES ('alex', 'ROLE_USER');
 
-INSERT INTO User(username,email,password,firstName, lastName,enable)
-VALUES ('ocurspotter','ocur@gmail.com','$2a$10$04TVADrR6/SPLBjsK0N30.Jf5fNjBugSACeGv1S69dZALR7lSov0y','Mario','Ferreira',true);
-INSERT INTO User(username,email,password,firstName, lastName,enable)
-VALUES ('alex','alex@gmail.com','$2a$10$04TVADrR6/SPLBjsK0N30.Jf5fNjBugSACeGv1S69dZALR7lSov0y','Alex','Teixeira',true);
+INSERT INTO User(username,email,password,firstName, lastName,enabled, createdDate)
+VALUES ('ocurspotter','ocur@gmail.com','$2a$10$04TVADrR6/SPLBjsK0N30.Jf5fNjBugSACeGv1S69dZALR7lSov0y','Mario','Ferreira',true, '2018-01-19 03:14:07');
+INSERT INTO User(username,email,password,firstName, lastName,enabled, createdDate)
+VALUES ('alex','alex@gmail.com','$2a$10$04TVADrR6/SPLBjsK0N30.Jf5fNjBugSACeGv1S69dZALR7lSov0y','Alex','Teixeira',true, '2018-01-19 03:14:07');
 
 INSERT INTO UserRole (userId, role)
 VALUES (1, 'ROLE_USER');

@@ -2,6 +2,8 @@ package com.ocurspotter.model;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name="Solution")
@@ -38,6 +40,9 @@ public class Solution {
 	@JoinColumn(name = "userId")
 	private User user;
 
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "solution")
+	private Set<SolutionVote> votes = new HashSet<SolutionVote>(0);
+
 
 	public Solution() { }
 
@@ -68,9 +73,7 @@ public class Solution {
 		return deadline;
 	}
 
-	public void setDeadline(Date deadline) {
-		this.deadline = deadline;
-	}
+	public void setDeadline(Date deadline) { this.deadline = deadline; }
 
 	public Double getValue() { return value; }
 
