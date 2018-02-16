@@ -1,5 +1,9 @@
 package com.ocurspotter.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
@@ -14,7 +18,7 @@ public class Solution {
 	@Column(name = "id")
 	private Long id;
 
-	@Column(name = "name")
+	@Column(name = "description")
 	private String description;
 
 	@Column(name = "openDate")
@@ -46,11 +50,17 @@ public class Solution {
 
 	public Solution() { }
 
-	public Solution(Long id, String description, Date deadline, Double value) {
-		this.id = id;
+	public Solution(String description, Date openDate, Date deadline, Double value, boolean choosed, boolean status,
+		Occurrence occurrence, User user, Set<SolutionVote> votes) {
 		this.description = description;
+		this.openDate = openDate;
 		this.deadline = deadline;
 		this.value = value;
+		this.choosed = choosed;
+		this.status = status;
+		this.occurrence = occurrence;
+		this.user = user;
+		this.votes = votes;
 	}
 
 	public Long getId() {
@@ -78,5 +88,53 @@ public class Solution {
 	public Double getValue() { return value; }
 
 	public void setValue(Double value) { this.value = value; }
+
+	public Date getOpenDate() {
+		return openDate;
+	}
+
+	public void setOpenDate(Date openDate) {
+		this.openDate = openDate;
+	}
+
+	public boolean getChoosed() {
+		return choosed;
+	}
+
+	public void setChoosed(boolean choosed) {
+		this.choosed = choosed;
+	}
+
+	public boolean getStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+
+	public Occurrence getOccurrence() {
+		return occurrence;
+	}
+
+	public void setOccurrence(Occurrence occurrence) {
+		this.occurrence = occurrence;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Set<SolutionVote> getVotes() {
+		return votes;
+	}
+
+	public void setVotes(Set<SolutionVote> votes) {
+		this.votes = votes;
+	}
 }
 

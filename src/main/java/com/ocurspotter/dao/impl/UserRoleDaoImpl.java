@@ -2,19 +2,20 @@ package com.ocurspotter.dao.impl;
 
 import com.ocurspotter.dao.UserRoleDao;
 import com.ocurspotter.model.UserRole;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
+@Transactional
 public class UserRoleDaoImpl implements UserRoleDao {
 
-	private static Log logger = LogFactory.getLog(UserRoleDaoImpl.class);
+	private static Logger logger = Logger.getLogger(UserRoleDaoImpl.class);
 
 	@Autowired
 	private SessionFactory sessionFactory;
@@ -25,13 +26,13 @@ public class UserRoleDaoImpl implements UserRoleDao {
 	 * @param userRole the user role
 	 */
 	public void save(UserRole userRole) {
-		logger.debug("Start saving the user role");
+		logger.info("Start saving the user role");
 		try {
 			sessionFactory.getCurrentSession().save(userRole);
 		} catch (Exception e) {
 			logger.error("An error has occurred while saving an user role", e);
 		} finally {
-			logger.debug("End saving user role");
+			logger.info("End saving user role");
 		}
 	}
 
@@ -43,7 +44,7 @@ public class UserRoleDaoImpl implements UserRoleDao {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<UserRole> findByUser(Integer userId) {
-		logger.debug("Start getting the user roles of user: " + userId);
+		logger.info("Start getting the user roles of user: " + userId);
 		try {
 			List<UserRole> usersRole = new ArrayList<UserRole>();
 
@@ -58,7 +59,7 @@ public class UserRoleDaoImpl implements UserRoleDao {
 		} catch (Exception e) {
 			logger.error("An error has occurred while getting the user roles", e);
 		} finally {
-			logger.debug("End of get the user roles");
+			logger.info("End of get the user roles");
 		}
 		return null;
 

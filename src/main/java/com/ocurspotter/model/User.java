@@ -1,6 +1,11 @@
 package com.ocurspotter.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.*;
@@ -14,7 +19,7 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "id")
-	private Integer id;
+	private Long id;
 
 	@Column(name = "username")
 	private String username;
@@ -49,9 +54,9 @@ public class User {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
 	private Set<SolutionVote> solutionVotes = new HashSet<SolutionVote>(0);
 
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY)@JsonIgnore
 	@JoinTable(
-		name = "UserTypes",
+		name = "UserType",
 		joinColumns = { @JoinColumn(name = "userId") },
 		inverseJoinColumns = { @JoinColumn(name = "typeId") }
 	)
@@ -76,9 +81,9 @@ public class User {
 		this.types = types;
 	}
 
-	public Integer getId() { return this.id; }
+	public Long getId() { return this.id; }
 
-	public void setId(Integer id) { this.id = id; }
+	public void setId(Long id) { this.id = id; }
 
 	public String getUsername() { return this.username; }
 
@@ -96,7 +101,7 @@ public class User {
 
 	public void setPassword(String password) { this.password = password; }
 
-	public boolean isEnabled() { return this.enabled; }
+	public boolean getEnabled() { return this.enabled; }
 
 	public void setEnabled(boolean enabled) { this.enabled = enabled; }
 
@@ -150,5 +155,27 @@ public class User {
 
 	public void setTypes(Set<Type> types) {
 		this.types = types;
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = 5;
+		hash = 83 * hash + Objects.hashCode(this.id);
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final User other = (User) obj;
+		if (!Objects.equals(this.id, other.id)) {
+			return false;
+		}
+		return true;
 	}
 }

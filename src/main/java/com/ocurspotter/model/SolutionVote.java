@@ -18,12 +18,12 @@ public class SolutionVote implements Serializable {
 	private User user;
 
 	@Column(name = "vote")
-	private Integer vote;
+	private Boolean vote;
 
 
 	public SolutionVote() {}
 
-	public SolutionVote(Solution solution, User user, int vote) {
+	public SolutionVote(Solution solution, User user, boolean vote) {
 		this.solution = solution;
 		this.user = user;
 		this.vote = vote;
@@ -45,11 +45,11 @@ public class SolutionVote implements Serializable {
 		this.user = user;
 	}
 
-	public Integer getVote() {
+	public Boolean getVote() {
 		return vote;
 	}
 
-	public void setVote(Integer vote) {
+	public void setVote(Boolean vote) {
 		this.vote = vote;
 	}
 }

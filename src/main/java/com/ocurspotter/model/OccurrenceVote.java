@@ -1,5 +1,7 @@
 package com.ocurspotter.model;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -18,11 +20,11 @@ public class OccurrenceVote implements Serializable {
 	private User user;
 
 	@Column(name = "vote")
-	private Integer vote;
+	private Boolean vote;
 
 	public OccurrenceVote() {}
 
-	public OccurrenceVote(Occurrence occurrence, User user, int vote) {
+	public OccurrenceVote(Occurrence occurrence, User user, boolean vote) {
 		this.occurrence = occurrence;
 		this.user = user;
 		this.vote = vote;
@@ -44,11 +46,11 @@ public class OccurrenceVote implements Serializable {
 		this.user = user;
 	}
 
-	public Integer getVote() {
+	public Boolean getVote() {
 		return vote;
 	}
 
-	public void setVote(Integer vote) {
+	public void setVote(Boolean vote) {
 		this.vote = vote;
 	}
 }

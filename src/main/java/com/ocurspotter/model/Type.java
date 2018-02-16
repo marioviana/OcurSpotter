@@ -1,7 +1,12 @@
 package com.ocurspotter.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -10,7 +15,7 @@ public class Type {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "typeId")
+	@Column(name = "id")
 	private Long id;
 
 	@Column(name = "name")
@@ -19,14 +24,18 @@ public class Type {
 	@Column(name = "description")
 	private String description;
 
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "type")
+	private Set<Occurrence> occurrences = new HashSet<Occurrence>(0);
+
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "types")
 	private Set<User> userTypes = new HashSet<User>(0);
 
 	public Type() {}
 
-	public Type(String name, String description, Set<User> userTypes) {
+	public Type(String name, String description, Set<Occurrence> occurrences, Set<User> userTypes) {
 		this.name = name;
 		this.description = description;
+		this.occurrences = occurrences;
 		this.userTypes = userTypes;
 	}
 
@@ -42,12 +51,42 @@ public class Type {
 
 	public void setDescription(String description) { this.description = description; }
 
+	public Set<Occurrence> getOccurrences() {
+		return occurrences;
+	}
+
+	public void setOccurrences(Set<Occurrence> occurrences) {
+		this.occurrences = occurrences;
+	}
+
 	public Set<User> getUserTypes() {
 		return userTypes;
 	}
 
 	public void setUserTypes(Set<User> userTypes) {
 		this.userTypes = userTypes;
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = 5;
+		hash = 83 * hash + Objects.hashCode(this.id);
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final Type other = (Type) obj;
+		if (!Objects.equals(this.id, other.id)) {
+			return false;
+		}
+		return true;
 	}
 
 }

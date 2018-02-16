@@ -1,5 +1,9 @@
 package com.ocurspotter.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
@@ -55,22 +59,24 @@ public class Occurrence {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "occurrence")
 	private Set<OccurrenceVote> votes = new HashSet<OccurrenceVote>(0);
 
-	public Occurrence() {
-	}
+	public Occurrence() {}
 
-	public Occurrence(Long id, String title, String description, Boolean status, String image, Date openDate, Date closeDate, Double latitude, Double longitude, Boolean suggestion, Type type, User user) {
-		this.id = id;
+	public Occurrence(String title, String description, Boolean status, Date openDate, Date closeDate, Double latitude,
+		Double longitude, Boolean suggestion, String image, Type type, User user, Set<Solution> solutions,
+		Set<OccurrenceVote> votes) {
 		this.title = title;
 		this.description = description;
 		this.status = status;
-		this.image = image;
 		this.openDate = openDate;
 		this.closeDate = closeDate;
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.suggestion = suggestion;
+		this.image = image;
 		this.type = type;
 		this.user = user;
+		this.solutions = solutions;
+		this.votes = votes;
 	}
 
 	public Long getId() {
@@ -95,14 +101,6 @@ public class Occurrence {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public Boolean getstatus() {
-		return status;
-	}
-
-	public void setstatus(Boolean status) {
-		this.status = status;
 	}
 
 	public Date getOpenDate() {

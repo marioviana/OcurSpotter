@@ -1,21 +1,25 @@
 package com.ocurspotter.dao.impl;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.ocurspotter.dao.UserDao;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.ocurspotter.model.User;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
+@Transactional
 public class UserDaoImpl implements UserDao {
 
-	private static Log logger = LogFactory.getLog(UserDaoImpl.class);
+	private static Logger logger = Logger.getLogger(UserDaoImpl.class);
 
 	@Autowired
 	private SessionFactory sessionFactory;
@@ -26,13 +30,13 @@ public class UserDaoImpl implements UserDao {
 	 * @param user the user
 	 */
 	public void save(User user) {
-		logger.debug("Start saving user");
+		logger.info("Start saving user");
 		try {
 			sessionFactory.getCurrentSession().save(user);
 		} catch (Exception e) {
 			logger.error("An error has occurred while saving an user", e);
 		} finally {
-			logger.debug("End saving user");
+			logger.info("End saving user");
 		}
 	}
 
@@ -44,7 +48,7 @@ public class UserDaoImpl implements UserDao {
 	 */
 	@SuppressWarnings("unchecked")
 	public User findByUsername(String username) {
-		logger.debug("Start getting the user: " + username);
+		logger.info("Start getting the user: " + username);
 		try {
 			List<User> users = new ArrayList<User>();
 			users = sessionFactory.getCurrentSession().createQuery("from User where username=?").setParameter(0, username)
@@ -57,7 +61,95 @@ public class UserDaoImpl implements UserDao {
 		} catch (Exception e) {
 			logger.error("An error has occurred while getting the user", e);
 		} finally {
-			logger.debug("End of get the user");
+			logger.info("End of get the user");
+		}
+		return null;
+	}
+
+	/**
+	 * Get by id.
+	 *
+	 * @param id the occurrence id
+	 */
+	public User getById(Long id) {
+		logger.info("Start getting the occurrence by id: " + id);
+		try {
+			final Criteria criteria = sessionFactory.getCurrentSession()
+				.createCriteria(User.class).add(Restrictions.eq("id", id));
+			return (User) criteria.uniqueResult();
+		} catch (Exception e) {
+			logger.error("An error has occurred while getting a type", e);
+		} finally {
+			logger.info("End getting type");
+		}
+		return null;
+	}
+
+	/**
+	 * Gets the all.
+	 *
+	 * @return the all
+	 */
+	@SuppressWarnings("unchecked")
+	public List<User> getAll() {
+		logger.info("Start get all occurrences");
+		try {
+			final Criteria criteria = sessionFactory.getCurrentSession().createCriteria(User.class);
+			return (List<User>) criteria.list();
+		} catch (Exception e) {
+			logger.error("An error has occurred while getting all the occurrences", e);
+		} finally {
+			logger.info("End get all occurrences");
+		}
+		return new ArrayList<User>(0);
+	}
+
+	/**
+	 * Find by solution.
+	 *
+	 * @param id the solution id
+	 * @return the user
+	 */
+	@SuppressWarnings("unchecked")
+	public User getBySolution(Long id) {
+		logger.info("Start getting the user by solution id: " + id);
+		try {
+			List<BigInteger> users = sessionFactory.getCurrentSession().createSQLQuery("select U.id from User as U INNER JOIN Solution as S ON S.userId = U.id WHERE S.id = :id").setParameter("id", id)
+				.list();
+			if (users.size() > 0) {
+				return getById(users.get(0).longValue());
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			logger.error("An error has occurred while getting the user", e);
+		} finally {
+			logger.info("End of get the user by solution");
+		}
+		return null;
+	}
+
+	/**
+	 * Find by occurrence.
+	 *
+	 * @param id the occurrence id
+	 * @return the user
+	 */
+	@SuppressWarnings("unchecked")
+	public User getByOccurrence(Long id) {
+		logger.info("Start getting the user by occurrence id: " + id);
+		try {
+			List<BigInteger> users = sessionFactory.getCurrentSession().createSQLQuery("select U.id from User as U INNER JOIN Occurrence as O ON O.userId = U.id WHERE O.id = :id").setParameter("id", id)
+				.list();
+			if (users.size() > 0) {
+				return getById(users.get(0).longValue());
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			logger.error("An error has occurred while getting the user", e);
+		} finally {
+			logger.info("End of get the user by occurrence");
 		}
 		return null;
 	}

@@ -2,7 +2,6 @@ package com.ocurspotter.config;
 
 import java.util.Properties;
 
-import com.ocurspotter.model.*;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.Bean;
@@ -65,5 +64,5 @@ public class AppConfig {
 		viewResolver.setSuffix(".jsp");
 		return viewResolver;
 	}
-	
+
 }
