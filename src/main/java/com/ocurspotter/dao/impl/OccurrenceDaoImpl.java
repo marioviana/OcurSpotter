@@ -61,10 +61,14 @@ public class OccurrenceDaoImpl implements OccurrenceDao {
 	/**
 	 * Gets the all.
 	 *
+	 * @param type the types
+	 * @param userId the user id
+	 * @param suggestion the suggestion
+	 * @param keyWord the key word
 	 * @return the all
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Occurrence> getAll(Long[] type, Long[] userId, Integer suggestion, String keyWord) {
+	public List<Occurrence> getAll(Long[] type, Long[] userId, Integer suggestion, String keyWord, Integer status) {
 		logger.info("Start get all occurrences");
 		try {
 			final Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Occurrence.class);
@@ -80,6 +84,14 @@ public class OccurrenceDaoImpl implements OccurrenceDao {
 				}
 				if (suggestion == 1){
 					criteria.add(Restrictions.eq("suggestion", Boolean.TRUE));
+				}
+			}
+			if (status != null){
+				if (status == 0) {
+					criteria.add(Restrictions.eq("status", Boolean.FALSE));
+				}
+				if (status == 1){
+					criteria.add(Restrictions.eq("status", Boolean.TRUE));
 				}
 			}
 			if (keyWord != null) {

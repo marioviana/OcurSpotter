@@ -52,10 +52,12 @@ public class OccurrenceController {
     public List<OccurrenceBean> getAllOccurrences(@RequestParam(required = false, value = "type") Long[] type,
                                                   @RequestParam(required = false, value = "user") Long[] userId,
                                                   @RequestParam(required = false, value = "sug") Integer suggestion,
-                                                  @RequestParam(required = false, value = "keyWord") String keyWord) {
+                                                  @RequestParam(required = false, value = "keyWord") String keyWord,
+                                                  @RequestParam(required = false, value = "status") Integer status,
+                                                  @RequestParam(required = false, value = "page") String page) {
         logger.info("REST - Getting all the occurrences:");
         try {
-            List<Occurrence> occurrences = this.occurrenceDao.getAll(type, userId, suggestion, keyWord);
+            List<Occurrence> occurrences = this.occurrenceDao.getAll(type, userId, suggestion, keyWord, status);
             List<OccurrenceBean> restOccurrences = new ArrayList<>();
             for (Occurrence occurrence : occurrences) {
                 User user = userDao.getByOccurrence(occurrence.getId());
@@ -80,7 +82,35 @@ public class OccurrenceController {
                         occurrence.getImage(), userBean, typeBean, upvotes, downvotes, solutionBeans);
                 restOccurrences.add(occurrenceBean);
             }
-            return restOccurrences;
+
+            final int records = restOccurrences.size();
+
+            if (page != null) {
+                final List<OccurrenceBean> resPage = new ArrayList<>();
+                final int p = Integer.parseInt(page);
+                final int nTemps = p * 10;
+                if (nTemps == 0 && records > 10) {
+                    for (int i = nTemps; i < 10; i++) {
+                        final OccurrenceBean temp = restOccurrences.get(i);
+                        resPage.add(temp);
+                    }
+                    return resPage;
+                } else if (records - nTemps > 10) {
+                    for (int i = nTemps; i < nTemps + 10; i++) {
+                        final OccurrenceBean temp = restOccurrences.get(i);
+                        resPage.add(temp);
+                    }
+                    return resPage;
+                } else {
+                    for (int i = nTemps; i < records; i++) {
+                        final OccurrenceBean temp = restOccurrences.get(i);
+                        resPage.add(temp);
+                    }
+                    return resPage;
+                }
+            } else {
+                return restOccurrences;
+            }
         } catch (Exception e) {
             logger.info("REST - Error getting all the occurrences", e);
         } finally {

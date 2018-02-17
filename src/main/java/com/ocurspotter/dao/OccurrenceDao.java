@@ -23,9 +23,13 @@ public interface OccurrenceDao {
 	/**
 	 * Gets the all.
 	 *
+	 * @param type the types
+	 * @param userId the user id
+	 * @param suggestion the suggestion
+	 * @param keyWord the key word
 	 * @return the all
 	 */
-	List<Occurrence> getAll(Long[] type, Long[] userId, Integer suggestion, String keyWord);
+	List<Occurrence> getAll(Long[] type, Long[] userId, Integer suggestion, String keyWord, Integer status);
 
 	/**
 	 * Find by solution.
