@@ -65,7 +65,7 @@ public class SolutionController {
 
     @RequestMapping(path="/solutions/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public SolutionBean getSolutionById(@PathVariable(value = "id") Long id) {
-        logger.info("REST - Getting solution by id:" + id);
+        logger.info("REST - Getting solution by id: " + id);
         try {
             Solution solution = this.solutionDao.getById(id);
             User user = this.userDao.getBySolution(id);

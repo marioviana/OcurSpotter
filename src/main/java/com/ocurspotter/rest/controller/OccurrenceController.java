@@ -49,17 +49,20 @@ public class OccurrenceController {
     private SolutionVoteDao solutionVoteDao;
 
     @RequestMapping(path="/occurrences", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<OccurrenceBean> getAllOccurrences() {
+    public List<OccurrenceBean> getAllOccurrences(@RequestParam(required = false, value = "type") Long[] type,
+                                                  @RequestParam(required = false, value = "user") Long[] userId,
+                                                  @RequestParam(required = false, value = "sug") Integer suggestion,
+                                                  @RequestParam(required = false, value = "keyWord") String keyWord) {
         logger.info("REST - Getting all the occurrences:");
         try {
-            List<Occurrence> occurrences = this.occurrenceDao.getAll();
+            List<Occurrence> occurrences = this.occurrenceDao.getAll(type, userId, suggestion, keyWord);
             List<OccurrenceBean> restOccurrences = new ArrayList<>();
             for (Occurrence occurrence : occurrences) {
                 User user = userDao.getByOccurrence(occurrence.getId());
                 UserBean userBean =
                         new UserBean(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getAvatar());
-                Type type = typeDao.getByOccurrence(occurrence.getId());
-                TypeBean typeBean = new TypeBean(type.getId(), type.getName(), type.getDescription());
+                Type typeOcc = typeDao.getByOccurrence(occurrence.getId());
+                TypeBean typeBean = new TypeBean(typeOcc.getId(), typeOcc.getName(), typeOcc.getDescription());
                 Long upvotes = this.occurrenceVoteDao.getUpvotesBySolution(occurrence.getId());
                 Long downvotes = this.occurrenceVoteDao.getDownvotesBySolution(occurrence.getId());
                 List<Solution> solutions = this.solutionDao.getByOccurrence(occurrence.getId());
@@ -88,13 +91,13 @@ public class OccurrenceController {
 
     @RequestMapping(path="/occurrences/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public OccurrenceBean getOccurrenceById(@PathVariable(value = "id") Long id) {
-        logger.info("REST - Getting occurrence by id:" + id);
+        logger.info("REST - Getting occurrence by id: " + id);
         try {
             Occurrence occurrence = this.occurrenceDao.getById(id);
-            User user = userDao.getByOccurrence(occurrence.getId());
+            User user = this.userDao.getByOccurrence(occurrence.getId());
             UserBean userBean =
                     new UserBean(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getAvatar());
-            Type type = typeDao.getByOccurrence(id);
+            Type type = this.typeDao.getByOccurrence(id);
             TypeBean typeBean = new TypeBean(type.getId(), type.getName(), type.getDescription());
             Long upvotes = this.occurrenceVoteDao.getUpvotesBySolution(occurrence.getId());
             Long downvotes = this.occurrenceVoteDao.getDownvotesBySolution(occurrence.getId());

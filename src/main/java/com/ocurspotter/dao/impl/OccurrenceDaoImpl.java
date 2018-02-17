@@ -64,10 +64,28 @@ public class OccurrenceDaoImpl implements OccurrenceDao {
 	 * @return the all
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Occurrence> getAll() {
+	public List<Occurrence> getAll(Long[] type, Long[] userId, Integer suggestion, String keyWord) {
 		logger.info("Start get all occurrences");
 		try {
 			final Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Occurrence.class);
+			if (type != null && type.length > 0) {
+				criteria.add(Restrictions.in("type.id", type));
+			}
+			if (userId != null){
+				criteria.add(Restrictions.in("user.id", userId));
+			}
+			if (suggestion != null){
+				if (suggestion == 0) {
+					criteria.add(Restrictions.eq("suggestion", Boolean.FALSE));
+				}
+				if (suggestion == 1){
+					criteria.add(Restrictions.eq("suggestion", Boolean.TRUE));
+				}
+			}
+			if (keyWord != null) {
+				criteria.add(Restrictions.or(Restrictions.like("title", "%" + keyWord + "%"),
+						Restrictions.like("description", "%" + keyWord + "%")));
+			}
 			return (List<Occurrence>) criteria.list();
 		} catch (Exception e) {
 			logger.error("An error has occurred while getting all the occurrences", e);

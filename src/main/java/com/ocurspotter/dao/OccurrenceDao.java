@@ -25,7 +25,7 @@ public interface OccurrenceDao {
 	 *
 	 * @return the all
 	 */
-	List<Occurrence> getAll();
+	List<Occurrence> getAll(Long[] type, Long[] userId, Integer suggestion, String keyWord);
 
 	/**
 	 * Find by solution.
