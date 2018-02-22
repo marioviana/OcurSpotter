@@ -2,7 +2,7 @@ package com.ocurspotter.rest.controller;
 
 import com.ocurspotter.dao.UserDao;
 import com.ocurspotter.model.User;
-import com.ocurspotter.rest.bean.UserBean;
+import com.ocurspotter.rest.dto.UserBean;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

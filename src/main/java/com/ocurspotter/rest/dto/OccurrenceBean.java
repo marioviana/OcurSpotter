@@ -1,6 +1,4 @@
-package com.ocurspotter.rest.bean;
-
-import com.ocurspotter.model.Type;
+package com.ocurspotter.rest.dto;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;

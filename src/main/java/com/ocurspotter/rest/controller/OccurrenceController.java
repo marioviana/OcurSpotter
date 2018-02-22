@@ -2,17 +2,16 @@ package com.ocurspotter.rest.controller;
 
 import com.ocurspotter.dao.*;
 import com.ocurspotter.model.*;
-import com.ocurspotter.rest.bean.OccurrenceBean;
-import com.ocurspotter.rest.bean.SolutionBean;
-import com.ocurspotter.rest.bean.TypeBean;
-import com.ocurspotter.rest.bean.UserBean;
+import com.ocurspotter.rest.dto.OccurrenceBean;
+import com.ocurspotter.rest.dto.SolutionBean;
+import com.ocurspotter.rest.dto.TypeBean;
+import com.ocurspotter.rest.dto.UserBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -149,6 +148,29 @@ public class OccurrenceController {
             logger.info("REST - Error getting the occurrence", e);
         } finally {
             logger.info("REST - End of getting the occurrence");
+        }
+        return null;
+    }
+
+    @RequestMapping(path="/occurrences/{id}/solutions", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<SolutionBean> getSolutionsByOccurrence(@PathVariable(value = "id") Long id) {
+        logger.info("REST - Getting solutions by occurrence: " + id);
+        try {
+            List<Solution> solutions = this.solutionDao.getByOccurrence(id);
+            List<SolutionBean> solutionBeans = new ArrayList<>();
+            for (Solution solution : solutions) {
+                User userSolution = this.userDao.getBySolution(solution.getId());
+                UserBean userBeanSolution = new UserBean(userSolution.getId(), userSolution.getUsername(), userSolution.getFirstName(), userSolution.getLastName(), userSolution.getAvatar());
+                Long upvotesSolution = this.solutionVoteDao.getUpvotesBySolution(solution.getId());
+                Long downvotesSolution = this.solutionVoteDao.getDownvotesBySolution(solution.getId());
+                SolutionBean solutionBean = new SolutionBean(solution.getId(), solution.getDescription(), solution.getOpenDate(), solution.getDeadline(), solution.getValue(), solution.getChoosed(), solution.getStatus(), userBeanSolution, upvotesSolution, downvotesSolution);
+                solutionBeans.add(solutionBean);
+            }
+            return solutionBeans;
+        } catch (Exception e) {
+            logger.info("REST - Error getting the solutions by occurrence", e);
+        } finally {
+            logger.info("REST - End of getting the solutions by occurrence");
         }
         return null;
     }

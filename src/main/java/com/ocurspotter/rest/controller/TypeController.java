@@ -2,7 +2,7 @@ package com.ocurspotter.rest.controller;
 
 import com.ocurspotter.dao.TypeDao;
 import com.ocurspotter.model.Type;
-import com.ocurspotter.rest.bean.TypeBean;
+import com.ocurspotter.rest.dto.TypeBean;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
