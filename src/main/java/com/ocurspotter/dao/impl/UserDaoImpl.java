@@ -69,18 +69,40 @@ public class UserDaoImpl implements UserDao {
 	/**
 	 * Get by id.
 	 *
-	 * @param id the occurrence id
+	 * @param id the user id
+	 * @return the user
 	 */
 	public User getById(Long id) {
-		logger.info("Start getting the occurrence by id: " + id);
+		logger.info("Start getting the user by id: " + id);
 		try {
 			final Criteria criteria = sessionFactory.getCurrentSession()
 				.createCriteria(User.class).add(Restrictions.eq("id", id));
 			return (User) criteria.uniqueResult();
 		} catch (Exception e) {
-			logger.error("An error has occurred while getting a type", e);
+			logger.error("An error has occurred while getting a user", e);
 		} finally {
-			logger.info("End getting type");
+			logger.info("End getting user");
+		}
+		return null;
+	}
+
+	/**
+	 * Get by id.
+	 *
+	 * @param username the user name.
+	 * @return the user
+	 */
+	public User getByUsername(String username) {
+		logger.info("Start getting the user");
+		try {
+			final Criteria criteria = sessionFactory.getCurrentSession()
+					.createCriteria(User.class)
+					.add(Restrictions.eq("username", username));
+			return (User) criteria.uniqueResult();
+		} catch (Exception e) {
+			logger.error("An error has occurred while getting a user", e);
+		} finally {
+			logger.info("End getting user");
 		}
 		return null;
 	}

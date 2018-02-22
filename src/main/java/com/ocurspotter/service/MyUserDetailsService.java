@@ -28,7 +28,7 @@ public class MyUserDetailsService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
 	
-		com.ocurspotter.model.User user = userDao.findByUsername(username);git add
+		com.ocurspotter.model.User user = userDao.findByUsername(username);
 		List<GrantedAuthority> authorities = buildUserAuthority(user.getUserRole());
 
 		return buildUserForAuthentication(user, authorities);

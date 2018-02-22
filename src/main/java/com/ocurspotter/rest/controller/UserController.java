@@ -6,13 +6,17 @@ import com.ocurspotter.rest.dto.UserBean;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.codec.binary.Base64;
 
 /**
  * Created by marioferreira on 17/02/2018.
@@ -25,6 +29,25 @@ public class UserController {
     /** The user dao. */
     @Autowired
     private UserDao userDao;
+
+    @RequestMapping(path="/login/{auth}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public UserBean getUserInAuth(@PathVariable(value = "auth") String auth) {
+        logger.info("REST - Getting user");
+        try {
+            String field = new String(Base64.decodeBase64(auth), StandardCharsets.UTF_8);
+            String username = field.substring(0, field.indexOf(':'));
+            PasswordEncoder encoder = new BCryptPasswordEncoder();
+            String password = field.substring(field.indexOf(':')+1, field.length());
+            User user = this.userDao.getByUsername(username);
+            if (encoder.matches(password, user.getPassword())) return new UserBean(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getAvatar());
+            else return null;
+        } catch (Exception e) {
+            logger.info("REST - Error getting the user", e);
+        } finally {
+            logger.info("REST - End of getting the user");
+        }
+        return null;
+    }
 
     @RequestMapping(path="/users", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<UserBean> getAllTypes() {

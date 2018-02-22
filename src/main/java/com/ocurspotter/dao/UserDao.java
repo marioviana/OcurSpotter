@@ -25,8 +25,17 @@ public interface UserDao {
 	 * Get by id.
 	 *
 	 * @param id the user id
+	 * @return the user
 	 */
 	User getById(Long id);
+
+	/**
+	 * Get by id.
+	 *
+	 * @param username the user name.
+	 * @return the user
+	 */
+	User getByUsername(String username);
 
 	/**
 	 * Gets the all.
