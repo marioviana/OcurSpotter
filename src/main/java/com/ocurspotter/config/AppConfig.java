@@ -11,7 +11,10 @@ import org.springframework.context.annotation.Import;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
@@ -49,6 +52,20 @@ public class AppConfig {
 		ds.setUsername("root");
 		ds.setPassword("mjorge1");
 		return ds;
+	}
+
+	@Bean
+	public WebMvcConfigurer corsConfigurer() {
+		return new WebMvcConfigurerAdapter() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/login/{auth}").allowedOrigins("http://localhost:8080");
+				registry.addMapping("/users").allowedOrigins("http://localhost:8080");
+				registry.addMapping("/users/{id}").allowedOrigins("http://localhost:8080");
+				registry.addMapping("/occurrences").allowedOrigins("http://localhost:8080");
+				registry.addMapping("/occurrences/{id}").allowedOrigins("http://localhost:8080");
+			}
+		};
 	}
 	
 	@Bean

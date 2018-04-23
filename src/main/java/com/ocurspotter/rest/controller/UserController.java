@@ -30,7 +30,7 @@ public class UserController {
     @Autowired
     private UserDao userDao;
 
-    @RequestMapping(path="/login/{auth}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(path="/login/{auth}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public UserBean getUserInAuth(@PathVariable(value = "auth") String auth) {
         logger.info("REST - Getting user");
         try {
