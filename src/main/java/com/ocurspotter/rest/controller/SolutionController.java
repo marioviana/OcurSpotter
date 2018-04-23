@@ -9,7 +9,9 @@ import com.ocurspotter.rest.dto.SolutionBean;
 import com.ocurspotter.rest.dto.UserBean;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -39,7 +41,7 @@ public class SolutionController {
     private SolutionVoteDao solutionVoteDao;
 
     @RequestMapping(path="/solutions", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<SolutionBean> getAllSolutions() {
+    public ResponseEntity<List<SolutionBean>> getAllSolutions() {
         logger.info("REST - Getting all the solutions:");
         try {
             List<Solution> solutions = this.solutionDao.getAll();
@@ -52,17 +54,17 @@ public class SolutionController {
                 SolutionBean solutionBean = new SolutionBean(solution.getId(), solution.getDescription(), solution.getOpenDate(), solution.getDeadline(), solution.getValue(), solution.getChoosed(), solution.getStatus(), userBean, upvotes, downvotes);
                 restSolutions.add(solutionBean);
             }
-            return restSolutions;
+            return new ResponseEntity<List<SolutionBean>>(restSolutions, HttpStatus.OK);
         } catch (Exception e) {
             logger.info("REST - Error getting all the solutions", e);
         } finally {
             logger.info("REST - End of getting all the solutions");
         }
-        return null;
+        return new ResponseEntity<List<SolutionBean>>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @RequestMapping(path="/solutions/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public SolutionBean getSolutionById(@PathVariable(value = "id") Long id) {
+    public ResponseEntity<SolutionBean> getSolutionById(@PathVariable(value = "id") Long id) {
         logger.info("REST - Getting solution by id: " + id);
         try {
             Solution solution = this.solutionDao.getById(id);
@@ -71,12 +73,12 @@ public class SolutionController {
             Long upvotes = this.solutionVoteDao.getUpvotesBySolution(id);
             Long downvotes = this.solutionVoteDao.getDownvotesBySolution(id);
             SolutionBean solutionBean = new SolutionBean(solution.getId(), solution.getDescription(), solution.getOpenDate(), solution.getDeadline(), solution.getValue(), solution.getChoosed(), solution.getStatus(), userBean, upvotes, downvotes);
-            return solutionBean;
+            return new ResponseEntity<SolutionBean>(solutionBean, HttpStatus.OK);
         } catch (Exception e) {
             logger.info("REST - Error getting the solution", e);
         } finally {
             logger.info("REST - End of getting the solution");
         }
-        return null;
+        return new ResponseEntity<SolutionBean>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

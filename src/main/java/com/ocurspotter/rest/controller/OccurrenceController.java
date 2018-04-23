@@ -7,7 +7,9 @@ import com.ocurspotter.rest.dto.SolutionBean;
 import com.ocurspotter.rest.dto.TypeBean;
 import com.ocurspotter.rest.dto.UserBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -48,12 +50,12 @@ public class OccurrenceController {
     private SolutionVoteDao solutionVoteDao;
 
     @RequestMapping(path="/occurrences", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<OccurrenceBean> getAllOccurrences(@RequestParam(required = false, value = "type") Long[] type,
-                                                  @RequestParam(required = false, value = "user") Long[] userId,
-                                                  @RequestParam(required = false, value = "sug") Integer suggestion,
-                                                  @RequestParam(required = false, value = "keyWord") String keyWord,
-                                                  @RequestParam(required = false, value = "status") Integer status,
-                                                  @RequestParam(required = false, value = "page") String page) {
+    public ResponseEntity<List<OccurrenceBean>> getAllOccurrences(@RequestParam(required = false, value = "type") Long[] type,
+                                                                 @RequestParam(required = false, value = "user") Long[] userId,
+                                                                 @RequestParam(required = false, value = "sug") Integer suggestion,
+                                                                 @RequestParam(required = false, value = "keyWord") String keyWord,
+                                                                 @RequestParam(required = false, value = "status") Integer status,
+                                                                 @RequestParam(required = false, value = "page") String page) {
         logger.info("REST - Getting all the occurrences:");
         try {
             List<Occurrence> occurrences = this.occurrenceDao.getAll(type, userId, suggestion, keyWord, status);
@@ -93,33 +95,33 @@ public class OccurrenceController {
                         final OccurrenceBean temp = restOccurrences.get(i);
                         resPage.add(temp);
                     }
-                    return resPage;
+                    return new ResponseEntity<List<OccurrenceBean>>(resPage, HttpStatus.OK);
                 } else if (records - nTemps > 10) {
                     for (int i = nTemps; i < nTemps + 10; i++) {
                         final OccurrenceBean temp = restOccurrences.get(i);
                         resPage.add(temp);
                     }
-                    return resPage;
+                    return new ResponseEntity<List<OccurrenceBean>>(resPage, HttpStatus.OK);
                 } else {
                     for (int i = nTemps; i < records; i++) {
                         final OccurrenceBean temp = restOccurrences.get(i);
                         resPage.add(temp);
                     }
-                    return resPage;
+                    return new ResponseEntity<List<OccurrenceBean>>(resPage, HttpStatus.OK);
                 }
             } else {
-                return restOccurrences;
+                return new ResponseEntity<List<OccurrenceBean>>(restOccurrences, HttpStatus.OK);
             }
         } catch (Exception e) {
             logger.info("REST - Error getting all the occurrences", e);
         } finally {
             logger.info("REST - End of getting all the occurrences");
         }
-        return null;
+        return new ResponseEntity<List<OccurrenceBean>>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @RequestMapping(path="/occurrences/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public OccurrenceBean getOccurrenceById(@PathVariable(value = "id") Long id) {
+    public ResponseEntity<OccurrenceBean> getOccurrenceById(@PathVariable(value = "id") Long id) {
         logger.info("REST - Getting occurrence by id: " + id);
         try {
             Occurrence occurrence = this.occurrenceDao.getById(id);
@@ -143,17 +145,17 @@ public class OccurrenceController {
             OccurrenceBean occurrenceBean = new OccurrenceBean(occurrence.getId(), occurrence.getTitle(), occurrence.getDescription(),
                     occurrence.getStatus(), occurrence.getOpenDate(), occurrence.getCloseDate(), occurrence.getLatitude(), occurrence.getLongitude(), occurrence.getSuggestion(),
                     occurrence.getImage(), userBean, typeBean, upvotes, downvotes, solutionBeans);
-            return occurrenceBean;
+            return new ResponseEntity<OccurrenceBean>(occurrenceBean, HttpStatus.OK);
         } catch (Exception e) {
             logger.info("REST - Error getting the occurrence", e);
         } finally {
             logger.info("REST - End of getting the occurrence");
         }
-        return null;
+        return new ResponseEntity<OccurrenceBean>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @RequestMapping(path="/occurrences/{id}/solutions", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<SolutionBean> getSolutionsByOccurrence(@PathVariable(value = "id") Long id) {
+    public ResponseEntity<List<SolutionBean>> getSolutionsByOccurrence(@PathVariable(value = "id") Long id) {
         logger.info("REST - Getting solutions by occurrence: " + id);
         try {
             List<Solution> solutions = this.solutionDao.getByOccurrence(id);
@@ -166,12 +168,12 @@ public class OccurrenceController {
                 SolutionBean solutionBean = new SolutionBean(solution.getId(), solution.getDescription(), solution.getOpenDate(), solution.getDeadline(), solution.getValue(), solution.getChoosed(), solution.getStatus(), userBeanSolution, upvotesSolution, downvotesSolution);
                 solutionBeans.add(solutionBean);
             }
-            return solutionBeans;
+            return new ResponseEntity<List<SolutionBean>>(solutionBeans, HttpStatus.OK);
         } catch (Exception e) {
             logger.info("REST - Error getting the solutions by occurrence", e);
         } finally {
             logger.info("REST - End of getting the solutions by occurrence");
         }
-        return null;
+        return new ResponseEntity<List<SolutionBean>>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
