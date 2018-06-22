@@ -1,7 +1,11 @@
 package com.ocurspotter.rest.controller;
 
+import com.ocurspotter.dao.TypeDao;
 import com.ocurspotter.dao.UserDao;
+import com.ocurspotter.dao.UserRoleDao;
+import com.ocurspotter.model.Type;
 import com.ocurspotter.model.User;
+import com.ocurspotter.model.UserRole;
 import com.ocurspotter.rest.dto.UserBean;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,14 +14,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 import org.apache.commons.codec.binary.Base64;
 
 /**
@@ -31,6 +35,18 @@ public class UserController {
     /** The user dao. */
     @Autowired
     private UserDao userDao;
+
+    /** The user dao. */
+    @Autowired
+    private UserRoleDao userRoleDao;
+
+    /** The type dao. */
+    @Autowired
+    private TypeDao typeDao;
+
+    /** The b crypt password encoder. */
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @RequestMapping(path="/login/{auth}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserBean> getUserInAuth(@PathVariable(value = "auth") String auth) {
@@ -49,6 +65,37 @@ public class UserController {
             logger.info("REST - End of getting the user");
         }
         return new ResponseEntity<UserBean>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @RequestMapping(path="/signup", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> postSignup(
+            @RequestParam(value = "username") String username,
+            @RequestParam(value = "email") String email,
+            @RequestParam(value = "password") String password,
+            @RequestParam(value = "firstName") String firstName,
+            @RequestParam(value = "lastName") String lastName) {
+        logger.info("REST - Creating user");
+        try {
+            final String avatar = "https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Creative-Tail-People-boy.svg/1024px-Creative-Tail-People-boy.svg.png";
+            final String passwordEncoded = bCryptPasswordEncoder.encode(password);
+            final Type type = this.typeDao.getById((long) 12);
+            Set<Type> types = new HashSet<>();
+            types.add(type);
+            User user = new User(username, firstName, lastName, passwordEncoded, true, avatar, types);
+            this.userDao.save(user);
+            final UserRole userRole = new UserRole(user, "ROLE_USER");
+            final Set<UserRole> userRoles = new HashSet<>();
+            userRoles.add(userRole);
+            user.setUserRole(userRoles);
+            this.userRoleDao.save(userRole);
+            this.userDao.save(user);
+            return new ResponseEntity<Integer>(HttpStatus.OK);
+        } catch (Exception e) {
+            logger.info("REST - Error creating user", e);
+        } finally {
+            logger.info("REST - End of creating the user");
+        }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @RequestMapping(path="/users", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

@@ -63,6 +63,17 @@ public class Solution {
 		this.votes = votes;
 	}
 
+	public Solution(String description, User user, Double value,  Date deadline, Occurrence occurrence) {
+		this.description = description;
+		this.openDate = new Date();
+		this.deadline = deadline;
+		this.value = value;
+		this.choosed = false;
+		this.status = false;
+		this.occurrence = occurrence;
+		this.user = user;
+	}
+
 	public Long getId() {
 		return id;
 	}

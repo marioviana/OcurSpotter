@@ -59,11 +59,7 @@ public class AppConfig {
 		return new WebMvcConfigurerAdapter() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/login/{auth}").allowedOrigins("http://localhost:8080");
-				registry.addMapping("/users").allowedOrigins("http://localhost:8080");
-				registry.addMapping("/users/{id}").allowedOrigins("http://localhost:8080");
-				registry.addMapping("/occurrences").allowedOrigins("http://localhost:8080");
-				registry.addMapping("/occurrences/{id}").allowedOrigins("http://localhost:8080");
+				registry.addMapping("/**").allowedMethods("POST", "PUT", "GET", "DELETE").allowedOrigins("*");
 			}
 		};
 	}

@@ -79,7 +79,21 @@ public class Occurrence {
 		this.votes = votes;
 	}
 
-	public Long getId() {
+    public Occurrence(String title, String description, Type type, Double latitude, Double longitude, Boolean suggestion, User user, String image) {
+		this.title = title;
+		this.description = description;
+		this.status = false;
+		this.openDate = new Date();
+		this.closeDate = null;
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.suggestion = suggestion;
+		this.image = image;
+		this.type = type;
+		this.user = user;
+    }
+
+    public Long getId() {
 		return id;
 	}
 

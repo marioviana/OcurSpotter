@@ -1,8 +1,6 @@
 package com.ocurspotter.rest.controller;
 
-import com.ocurspotter.dao.SolutionDao;
-import com.ocurspotter.dao.SolutionVoteDao;
-import com.ocurspotter.dao.UserDao;
+import com.ocurspotter.dao.*;
 import com.ocurspotter.model.Solution;
 import com.ocurspotter.model.User;
 import com.ocurspotter.rest.dto.SolutionBean;
@@ -12,12 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -35,6 +31,14 @@ public class SolutionController {
     /** The user dao. */
     @Autowired
     private UserDao userDao;
+
+    /** The occurrence dao. */
+    @Autowired
+    private OccurrenceDao occurrenceDao;
+
+    /** The type dao. */
+    @Autowired
+    private TypeDao typeDao;
 
     /** The solution vote dao. */
     @Autowired
@@ -80,5 +84,24 @@ public class SolutionController {
             logger.info("REST - End of getting the solution");
         }
         return new ResponseEntity<SolutionBean>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @RequestMapping(path="/solutions/new", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> newSolution(@RequestParam("description") String description,
+                                                 @RequestParam("author") Long author,
+                                                 @RequestParam("value") Double value,
+                                                 @RequestParam("deadline") Long deadLine,
+                                                 @RequestParam("occurrence") Long occurrence) {
+        logger.info("REST - Post solution: ");
+        try {
+            Solution solution = new Solution(description, this.userDao.getById(author), value, new Date(deadLine), this.occurrenceDao.getById(occurrence));
+            this.solutionDao.save(solution);
+            return new ResponseEntity<Integer>(200, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.info("REST - Error post the solution", e);
+        } finally {
+            logger.info("REST - End of post the solution");
+        }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

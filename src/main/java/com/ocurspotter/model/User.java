@@ -64,6 +64,16 @@ public class User {
 
 	public User() {}
 
+	public User(String username, String firstName, String lastName, String password, boolean enabled, String avatar, Set<Type> types) {
+		this.username = username;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.password = password;
+		this.enabled = enabled;
+		this.avatar = avatar;
+		this.types = types;
+	}
+
 	public User(String username, String firstName, String lastName, String password, boolean enabled, String avatar,
 		Set<UserRole> userRole, Set<Solution> solutions, Set<Occurrence> occurrences,
 		Set<OccurrenceVote> occurrenceVotes, Set<SolutionVote> solutionVotes, Set<Type> types) {

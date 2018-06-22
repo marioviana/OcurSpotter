@@ -95,6 +95,19 @@ public class OccurrenceBean {
                 this.solution = solution;
         }
 
+        public OccurrenceBean(Long id, String title, Date openDate, Double latitude, Double longitude,
+                              Boolean suggestion, TypeBean type, Long upvotes, Long downvotes) {
+                this.id = id;
+                this.title = title;
+                this.openDate = openDate;
+                this.latitude = latitude;
+                this.longitude = longitude;
+                this.suggestion = suggestion;
+                this.type = type;
+                this.upvotes = upvotes;
+                this.downvotes = downvotes;
+        }
+
         public Long getId() {
                 return id;
         }
