@@ -20,6 +20,13 @@ public interface SolutionVoteDao {
         SolutionVote getById(Long id);
 
         /**
+         * Get by user id and solution id.
+         *  @param userId the user id
+         * @param solutionId the solution id
+         */
+        Boolean getByPair(Long userId, Long solutionId);
+
+        /**
          * Gets the all.
          *
          * @return the all
@@ -41,4 +48,12 @@ public interface SolutionVoteDao {
          * @return the solution
          */
         Long getUpvotesBySolution(Long id);
+
+        /**
+         * Delete solution vote
+         *
+         * @param userId the user id
+         * @param solulionId the solution id
+         */
+        void delete(Long userId, Long solulionId);
 }

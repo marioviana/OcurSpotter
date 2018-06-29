@@ -81,14 +81,13 @@ public class UserController {
             final Type type = this.typeDao.getById((long) 12);
             Set<Type> types = new HashSet<>();
             types.add(type);
-            User user = new User(username, firstName, lastName, passwordEncoded, true, avatar, types);
+            User user = new User(username, firstName, lastName, passwordEncoded, true, avatar, types, email);
             this.userDao.save(user);
             final UserRole userRole = new UserRole(user, "ROLE_USER");
             final Set<UserRole> userRoles = new HashSet<>();
             userRoles.add(userRole);
             user.setUserRole(userRoles);
             this.userRoleDao.save(userRole);
-            this.userDao.save(user);
             return new ResponseEntity<Integer>(HttpStatus.OK);
         } catch (Exception e) {
             logger.info("REST - Error creating user", e);

@@ -39,6 +39,9 @@ public class User {
 	@Column(name = "avatar")
 	private String avatar;
 
+	@Column(name = "email")
+	private String email;
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
 	private Set<UserRole> userRole = new HashSet<UserRole>(0);
 
@@ -64,7 +67,7 @@ public class User {
 
 	public User() {}
 
-	public User(String username, String firstName, String lastName, String password, boolean enabled, String avatar, Set<Type> types) {
+	public User(String username, String firstName, String lastName, String password, boolean enabled, String avatar, Set<Type> types, String email) {
 		this.username = username;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -72,6 +75,7 @@ public class User {
 		this.enabled = enabled;
 		this.avatar = avatar;
 		this.types = types;
+		this.email = email;
 	}
 
 	public User(String username, String firstName, String lastName, String password, boolean enabled, String avatar,
@@ -166,6 +170,10 @@ public class User {
 	public void setTypes(Set<Type> types) {
 		this.types = types;
 	}
+
+	public String getEmail() { return email; }
+
+	public void setEmail(String email) { this.email = email; }
 
 	@Override
 	public int hashCode() {

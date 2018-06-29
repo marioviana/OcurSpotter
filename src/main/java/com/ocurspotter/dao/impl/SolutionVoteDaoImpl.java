@@ -2,8 +2,10 @@ package com.ocurspotter.dao.impl;
 
 import com.ocurspotter.dao.SolutionVoteDao;
 import com.ocurspotter.model.SolutionVote;
+import com.ocurspotter.rest.dto.SolutionVoteBean;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +56,43 @@ public class SolutionVoteDaoImpl implements SolutionVoteDao {
 			logger.error("An error has occurred while getting an solution vote", e);
 		} finally {
 			logger.info("End getting solution");
+		}
+		return null;
+	}
+
+	/**
+	 * Get by user id and solution id.
+	 *  @param userId the user id
+	 * @param solutionId the solution id
+	 */
+	public Boolean getByPair(Long userId, Long solutionId) {
+		logger.info("Start getting the solution vote by pair, user: " + userId + "and solution: " + solutionId);
+		try {
+			List<SolutionVoteBean> solutionVotes = sessionFactory.getCurrentSession()
+					.createSQLQuery("select * from SolutionVote where userId = :userId and solutionId = :solId and vote = :vote")
+					.setParameter("userId", userId)
+					.setParameter("solId", solutionId)
+					.setParameter("vote", true)
+					.list();
+			if (solutionVotes.size() > 0) {
+				return true;
+			} else {
+				solutionVotes = sessionFactory.getCurrentSession()
+						.createSQLQuery("select * from SolutionVote where userId = :userId and solutionId = :solId and vote = :vote")
+						.setParameter("userId", userId)
+						.setParameter("solId", solutionId)
+						.setParameter("vote", false)
+						.list();
+				if (solutionVotes.size() > 0) {
+					return false;
+				} else {
+					return null;
+				}
+			}
+		} catch (Exception e) {
+			logger.error("An error has occurred while getting a occurence vote", e);
+		} finally {
+			logger.info("End getting occurence vote");
 		}
 		return null;
 	}
@@ -125,5 +164,20 @@ public class SolutionVoteDaoImpl implements SolutionVoteDao {
 			logger.info("End of get the solution");
 		}
 		return null;
+	}
+
+	/**
+	 * Delete solution vote
+	 *
+	 * @param userId the user id
+	 * @param solulionId the solution id
+	 */
+	@SuppressWarnings("unchecked")
+	public void delete(Long userId, Long solulionId) {
+		Query query = sessionFactory.getCurrentSession()
+				.createQuery("delete SolutionVote where userId=:userId and solutionId=:solId")
+				.setParameter("userId", userId)
+				.setParameter("solId", solulionId);
+		query.executeUpdate();
 	}
 }
