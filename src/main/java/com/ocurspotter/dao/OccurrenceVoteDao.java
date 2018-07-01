@@ -48,6 +48,11 @@ public interface OccurrenceVoteDao {
          * @param userId the user id
          * @param occurrenceId the occurrence id
          */
-        @SuppressWarnings("unchecked")
         void delete(Long userId, Long occurrenceId);
+
+        /** Count occurrence votes
+	     *
+	     * @return the count
+	     */
+        Long count();
 }

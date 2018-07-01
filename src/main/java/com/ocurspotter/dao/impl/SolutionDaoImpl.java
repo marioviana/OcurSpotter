@@ -5,6 +5,7 @@ import com.ocurspotter.model.Solution;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -98,4 +99,23 @@ public class SolutionDaoImpl implements SolutionDao {
 		return new ArrayList<Solution>(0);
 	}
 
+	/* Count solutions
+	 *
+	 * @return the count
+	 */
+	@SuppressWarnings("unchecked")
+	public Long count() {
+		logger.info("Start getting the solution count");
+		try {
+			return (Long) sessionFactory.getCurrentSession()
+					.createCriteria(Solution.class)
+					.setProjection(Projections.rowCount())
+					.uniqueResult();
+		} catch (Exception e) {
+			logger.error("An error has occurred while getting the solution count", e);
+		} finally {
+			logger.info("End of get the solution count");
+		}
+		return null;
+	}
 }

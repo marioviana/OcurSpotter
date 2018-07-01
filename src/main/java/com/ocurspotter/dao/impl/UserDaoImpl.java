@@ -8,6 +8,7 @@ import com.ocurspotter.dao.UserDao;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -33,6 +34,22 @@ public class UserDaoImpl implements UserDao {
 		logger.info("Start saving user");
 		try {
 			sessionFactory.getCurrentSession().save(user);
+		} catch (Exception e) {
+			logger.error("An error has occurred while saving an user", e);
+		} finally {
+			logger.info("End saving user");
+		}
+	}
+
+	/**
+	 * Update.
+	 *
+	 * @param user the user
+	 */
+	public void update(User user) {
+		logger.info("Start saving user");
+		try {
+			sessionFactory.getCurrentSession().update(user);
 		} catch (Exception e) {
 			logger.error("An error has occurred while saving an user", e);
 		} finally {
@@ -176,4 +193,23 @@ public class UserDaoImpl implements UserDao {
 		return null;
 	}
 
+	/* Count users
+	 *
+	 * @return the count
+	 */
+	@SuppressWarnings("unchecked")
+	public Long count() {
+		logger.info("Start getting the user count");
+		try {
+			return (Long) sessionFactory.getCurrentSession()
+					.createCriteria(User.class)
+					.setProjection(Projections.rowCount())
+					.uniqueResult();
+		} catch (Exception e) {
+			logger.error("An error has occurred while getting the user count", e);
+		} finally {
+			logger.info("End of get the user count");
+		}
+		return null;
+	}
 }

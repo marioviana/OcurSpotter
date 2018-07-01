@@ -34,4 +34,10 @@ public interface SolutionDao {
      * @return the solutions
      */
     List<Solution> getByOccurrence(Long id);
+
+    /** Count occurrences
+	 *
+	 * @return the count
+     */
+    Long count();
 }

@@ -14,6 +14,13 @@ public interface UserDao {
 	void save(User user);
 
 	/**
+	 * Update.
+	 *
+	 * @param user the user
+	 */
+	void update(User user);
+
+	/**
 	 * Find by username.
 	 *
 	 * @param username the username
@@ -59,4 +66,10 @@ public interface UserDao {
 	 * @return the user
 	 */
 	User getByOccurrence(Long id);
+
+	/* Count users
+	 *
+	 * @return the count
+	 */
+	Long count();
 }

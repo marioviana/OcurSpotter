@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -179,5 +180,25 @@ public class SolutionVoteDaoImpl implements SolutionVoteDao {
 				.setParameter("userId", userId)
 				.setParameter("solId", solulionId);
 		query.executeUpdate();
+	}
+
+	/* Count solution votes
+	 *
+	 * @return the count
+	 */
+	@SuppressWarnings("unchecked")
+	public Long count() {
+		logger.info("Start getting the solution votes count");
+		try {
+			return (Long) sessionFactory.getCurrentSession()
+					.createCriteria(SolutionVote.class)
+					.setProjection(Projections.rowCount())
+					.uniqueResult();
+		} catch (Exception e) {
+			logger.error("An error has occurred while getting the solution votes count", e);
+		} finally {
+			logger.info("End of get the solution votes count");
+		}
+		return null;
 	}
 }

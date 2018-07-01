@@ -52,7 +52,7 @@ public class SolutionController {
             List<SolutionBean> restSolutions = new ArrayList<>();
             for (Solution solution : solutions) {
                 User user = this.userDao.getBySolution(solution.getId());
-                UserBean userBean = new UserBean(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getAvatar());
+                UserBean userBean = new UserBean(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getAvatar());
                 Long upvotes = this.solutionVoteDao.getUpvotesBySolution(solution.getId());
                 Long downvotes = this.solutionVoteDao.getDownvotesBySolution(solution.getId());
                 SolutionBean solutionBean = new SolutionBean(solution.getId(), solution.getDescription(), solution.getOpenDate(), solution.getDeadline(), solution.getValue(), solution.getChoosed(), solution.getStatus(), userBean, upvotes, downvotes);
@@ -73,7 +73,7 @@ public class SolutionController {
         try {
             Solution solution = this.solutionDao.getById(id);
             User user = this.userDao.getBySolution(id);
-            UserBean userBean = new UserBean(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getAvatar());
+            UserBean userBean = new UserBean(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getAvatar());
             Long upvotes = this.solutionVoteDao.getUpvotesBySolution(id);
             Long downvotes = this.solutionVoteDao.getDownvotesBySolution(id);
             SolutionBean solutionBean = new SolutionBean(solution.getId(), solution.getDescription(), solution.getOpenDate(), solution.getDeadline(), solution.getValue(), solution.getChoosed(), solution.getStatus(), userBean, upvotes, downvotes);

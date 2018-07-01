@@ -5,6 +5,7 @@ import com.ocurspotter.model.Type;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -102,4 +103,23 @@ public class TypeDaoImpl implements TypeDao {
 		return null;
 	}
 
+	/* Count types
+	 *
+	 * @return the count
+	 */
+	@SuppressWarnings("unchecked")
+	public Long count() {
+		logger.info("Start getting the type count");
+		try {
+			return (Long) sessionFactory.getCurrentSession()
+					.createCriteria(Type.class)
+					.setProjection(Projections.rowCount())
+					.uniqueResult();
+		} catch (Exception e) {
+			logger.error("An error has occurred while getting the type count", e);
+		} finally {
+			logger.info("End of get the type count");
+		}
+		return null;
+	}
 }

@@ -18,10 +18,14 @@ public class TypeBean {
         @XmlElement
         private String description;
 
-        public TypeBean(Long id, String name, String description) {
+        @XmlElement
+        private String avatar;
+
+        public TypeBean(Long id, String name, String description, String avatar) {
                 this.id = id;
                 this.name = name;
                 this.description = description;
+                this.avatar = avatar;
         }
 
         public Long getId() {
@@ -47,4 +51,8 @@ public class TypeBean {
         public void setDescription(String description) {
                 this.description = description;
         }
+
+        public String getAvatar() { return avatar; }
+
+        public void setAvatar(String avatar) { this.avatar = avatar; }
 }

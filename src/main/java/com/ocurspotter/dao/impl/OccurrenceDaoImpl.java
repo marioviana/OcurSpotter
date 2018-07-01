@@ -5,6 +5,7 @@ import com.ocurspotter.model.Occurrence;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -128,6 +129,26 @@ public class OccurrenceDaoImpl implements OccurrenceDao {
 			logger.error("An error has occurred while getting the occurrence", e);
 		} finally {
 			logger.info("End of get the occurrence");
+		}
+		return null;
+	}
+
+	/* Count occurrences
+	 *
+	 * @return the count
+	 */
+	@SuppressWarnings("unchecked")
+	public Long count() {
+		logger.info("Start getting the occurrence count");
+		try {
+			return (Long) sessionFactory.getCurrentSession()
+					.createCriteria(Occurrence.class)
+					.setProjection(Projections.rowCount())
+					.uniqueResult();
+		} catch (Exception e) {
+			logger.error("An error has occurred while getting the occurrence count", e);
+		} finally {
+			logger.info("End of get the occurrence count");
 		}
 		return null;
 	}

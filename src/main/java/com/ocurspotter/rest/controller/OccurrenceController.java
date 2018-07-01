@@ -65,16 +65,16 @@ public class OccurrenceController {
             for (Occurrence occurrence : occurrences) {
                 User user = userDao.getByOccurrence(occurrence.getId());
                 UserBean userBean =
-                        new UserBean(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getAvatar());
+                        new UserBean(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getAvatar());
                 Type typeOcc = typeDao.getByOccurrence(occurrence.getId());
-                TypeBean typeBean = new TypeBean(typeOcc.getId(), typeOcc.getName(), typeOcc.getDescription());
+                TypeBean typeBean = new TypeBean(typeOcc.getId(), typeOcc.getName(), typeOcc.getDescription(), typeOcc.getAvatar());
                 Long upvotes = this.occurrenceVoteDao.getUpvotesBySolution(occurrence.getId());
                 Long downvotes = this.occurrenceVoteDao.getDownvotesBySolution(occurrence.getId());
                 List<Solution> solutions = this.solutionDao.getByOccurrence(occurrence.getId());
                 List<SolutionBean> solutionBeans = new ArrayList<>();
                 for (Solution solution : solutions) {
                     User userSolution = this.userDao.getBySolution(solution.getId());
-                    UserBean userBeanSolution = new UserBean(userSolution.getId(), userSolution.getUsername(), userSolution.getFirstName(), userSolution.getLastName(), userSolution.getAvatar());
+                    UserBean userBeanSolution = new UserBean(userSolution.getId(), userSolution.getUsername(), userSolution.getFirstName(), userSolution.getLastName(), userSolution.getEmail(), userSolution.getAvatar());
                     Long upvotesSolution = this.solutionVoteDao.getUpvotesBySolution(solution.getId());
                     Long downvotesSolution = this.solutionVoteDao.getDownvotesBySolution(solution.getId());
                     SolutionBean solutionBean = new SolutionBean(solution.getId(), solution.getDescription(), solution.getOpenDate(), solution.getDeadline(), solution.getValue(), solution.getChoosed(), solution.getStatus(), userBeanSolution, upvotesSolution, downvotesSolution);
@@ -134,7 +134,7 @@ public class OccurrenceController {
             List<OccurrenceBean> restOccurrences = new ArrayList<>();
             for (Occurrence occurrence : occurrences) {
                 Type typeOcc = typeDao.getByOccurrence(occurrence.getId());
-                TypeBean typeBean = new TypeBean(typeOcc.getId(), typeOcc.getName(), typeOcc.getDescription());
+                TypeBean typeBean = new TypeBean(typeOcc.getId(), typeOcc.getName(), typeOcc.getDescription(), typeOcc.getAvatar());
                 Long upvotes = this.occurrenceVoteDao.getUpvotesBySolution(occurrence.getId());
                 Long downvotes = this.occurrenceVoteDao.getDownvotesBySolution(occurrence.getId());
                 OccurrenceBean occurrenceBean = new OccurrenceBean(occurrence.getId(), occurrence.getTitle(),
@@ -186,16 +186,16 @@ public class OccurrenceController {
             Occurrence occurrence = this.occurrenceDao.getById(id);
             User user = this.userDao.getByOccurrence(occurrence.getId());
             UserBean userBean =
-                    new UserBean(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getAvatar());
+                    new UserBean(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getAvatar());
             Type type = this.typeDao.getByOccurrence(id);
-            TypeBean typeBean = new TypeBean(type.getId(), type.getName(), type.getDescription());
+            TypeBean typeBean = new TypeBean(type.getId(), type.getName(), type.getDescription(), type.getAvatar());
             Long upvotes = this.occurrenceVoteDao.getUpvotesBySolution(occurrence.getId());
             Long downvotes = this.occurrenceVoteDao.getDownvotesBySolution(occurrence.getId());
             List<Solution> solutions = this.solutionDao.getByOccurrence(id);
             List<SolutionBean> solutionBeans = new ArrayList<>();
             for (Solution solution : solutions) {
                 User userSolution = this.userDao.getBySolution(solution.getId());
-                UserBean userBeanSolution = new UserBean(userSolution.getId(), userSolution.getUsername(), userSolution.getFirstName(), userSolution.getLastName(), userSolution.getAvatar());
+                UserBean userBeanSolution = new UserBean(userSolution.getId(), userSolution.getUsername(), userSolution.getFirstName(), userSolution.getLastName(), userSolution.getEmail(), userSolution.getAvatar());
                 Long upvotesSolution = this.solutionVoteDao.getUpvotesBySolution(solution.getId());
                 Long downvotesSolution = this.solutionVoteDao.getDownvotesBySolution(solution.getId());
                 SolutionBean solutionBean = new SolutionBean(solution.getId(), solution.getDescription(), solution.getOpenDate(), solution.getDeadline(), solution.getValue(), solution.getChoosed(), solution.getStatus(), userBeanSolution, upvotesSolution, downvotesSolution);
@@ -221,7 +221,7 @@ public class OccurrenceController {
             List<SolutionBean> solutionBeans = new ArrayList<>();
             for (Solution solution : solutions) {
                 User userSolution = this.userDao.getBySolution(solution.getId());
-                UserBean userBeanSolution = new UserBean(userSolution.getId(), userSolution.getUsername(), userSolution.getFirstName(), userSolution.getLastName(), userSolution.getAvatar());
+                UserBean userBeanSolution = new UserBean(userSolution.getId(), userSolution.getUsername(), userSolution.getFirstName(), userSolution.getLastName(), userSolution.getEmail(), userSolution.getAvatar());
                 Long upvotesSolution = this.solutionVoteDao.getUpvotesBySolution(solution.getId());
                 Long downvotesSolution = this.solutionVoteDao.getDownvotesBySolution(solution.getId());
                 SolutionBean solutionBean = new SolutionBean(solution.getId(), solution.getDescription(), solution.getOpenDate(), solution.getDeadline(), solution.getValue(), solution.getChoosed(), solution.getStatus(), userBeanSolution, upvotesSolution, downvotesSolution);

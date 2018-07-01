@@ -38,4 +38,10 @@ public interface OccurrenceDao {
 	 * @return the occurrence
 	 */
 	Occurrence getBySolution(Long id);
+
+	/* Count occurrences
+	 *
+	 * @return the count
+	 */
+	Long count();
 }

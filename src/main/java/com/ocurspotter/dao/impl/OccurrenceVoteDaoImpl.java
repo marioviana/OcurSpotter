@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -163,5 +164,25 @@ public class OccurrenceVoteDaoImpl implements OccurrenceVoteDao {
 				.setParameter("userId", userId)
 				.setParameter("occId", occurrenceId);
 		query.executeUpdate();
+	}
+
+	/* Count occurrence votes
+	 *
+	 * @return the count
+	 */
+	@SuppressWarnings("unchecked")
+	public Long count() {
+		logger.info("Start getting the occurrence votes count");
+		try {
+			return (Long) sessionFactory.getCurrentSession()
+					.createCriteria(OccurrenceVote.class)
+					.setProjection(Projections.rowCount())
+					.uniqueResult();
+		} catch (Exception e) {
+			logger.error("An error has occurred while getting the occurrence votes count", e);
+		} finally {
+			logger.info("End of get the occurrence votes count");
+		}
+		return null;
 	}
 }

@@ -56,4 +56,10 @@ public interface SolutionVoteDao {
          * @param solulionId the solution id
          */
         void delete(Long userId, Long solulionId);
+
+        /** Count solution votes
+         *
+         * @return the count
+         */
+        Long count();
 }

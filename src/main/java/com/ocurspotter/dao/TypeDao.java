@@ -34,4 +34,10 @@ public interface TypeDao {
      * @return the user
      */
     Type getByOccurrence(Long id);
+
+    /** Count types
+     *
+     * @return the count
+     */
+    Long count();
 }

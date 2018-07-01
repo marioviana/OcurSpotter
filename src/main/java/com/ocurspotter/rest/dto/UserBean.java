@@ -22,6 +22,9 @@ public class UserBean {
         private String lastName;
 
         @XmlElement
+        private String email;
+
+        @XmlElement
         private String avatar;
 
         public UserBean(Long id, String username, String firstName, String lastName, String avatar) {
@@ -29,6 +32,15 @@ public class UserBean {
                 this.username = username;
                 this.firstName = firstName;
                 this.lastName = lastName;
+                this.avatar = avatar;
+        }
+
+        public UserBean(Long id, String username, String firstName, String lastName, String email, String avatar) {
+                this.id = id;
+                this.username = username;
+                this.firstName = firstName;
+                this.lastName = lastName;
+                this.email = email;
                 this.avatar = avatar;
         }
 
@@ -71,4 +83,8 @@ public class UserBean {
         public void setAvatar(String avatar) {
                 this.avatar = avatar;
         }
+
+        public String getEmail() { return email; }
+
+        public void setEmail(String email) { this.email = email; }
 }

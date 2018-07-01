@@ -57,7 +57,7 @@ public class UserController {
             PasswordEncoder encoder = new BCryptPasswordEncoder();
             String password = field.substring(field.indexOf(':')+1, field.length());
             User user = this.userDao.getByUsername(username);
-            if (encoder.matches(password, user.getPassword())) return new ResponseEntity<UserBean>(new UserBean(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getAvatar()), HttpStatus.OK);
+            if (encoder.matches(password, user.getPassword())) return new ResponseEntity<UserBean>(new UserBean(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getAvatar()), HttpStatus.OK);
             else return null;
         } catch (Exception e) {
             logger.info("REST - Error getting the user", e);
@@ -104,7 +104,7 @@ public class UserController {
             List<User> users = this.userDao.getAll();
             List<UserBean> userBeans = new ArrayList<>();
             for (User user : users){
-                userBeans.add(new UserBean(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getAvatar()));
+                userBeans.add(new UserBean(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getAvatar()));
             }
             return new ResponseEntity<List<UserBean>>(userBeans, HttpStatus.OK);
         } catch (Exception e) {
@@ -120,12 +120,59 @@ public class UserController {
         logger.info("REST - Getting user with id: " + id);
         try {
             User user = this.userDao.getById(id);
-            return new ResponseEntity<UserBean>(new UserBean(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getAvatar()), HttpStatus.OK);
+            return new ResponseEntity<UserBean>(new UserBean(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getAvatar()), HttpStatus.OK);
         } catch (Exception e) {
             logger.info("REST - Error getting the user", e);
         } finally {
             logger.info("REST - End of getting the user");
         }
         return new ResponseEntity<UserBean>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @RequestMapping(path="/profile", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> postProfile(
+            @RequestParam(value = "user") Long userId,
+            @RequestParam(value = "email") String email,
+            @RequestParam(value = "firstName") String firstName,
+            @RequestParam(value = "lastName") String lastName) {
+        logger.info("REST - Updating user");
+        try {
+            User user = this.userDao.getById(userId);
+            user.setEmail(email);
+            user.setFirstName(firstName);
+            user.setLastName(lastName);
+            this.userDao.update(user);
+            return new ResponseEntity<Integer>(HttpStatus.OK);
+        } catch (Exception e) {
+            logger.info("REST - Error updating user", e);
+        } finally {
+            logger.info("REST - End of updating the user");
+        }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @RequestMapping(path="/password", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> postProfile(
+            @RequestParam(value = "user") Long userId,
+            @RequestParam(value = "oldPassword") String oldPassword,
+            @RequestParam(value = "newPassword") String newPassword) {
+        logger.info("REST - Updating user");
+        try {
+            User user = this.userDao.getById(userId);
+            String oldPw = new String(Base64.decodeBase64(oldPassword), StandardCharsets.UTF_8);
+            String newPw = new String(Base64.decodeBase64(newPassword), StandardCharsets.UTF_8);
+            PasswordEncoder encoder = new BCryptPasswordEncoder();
+            if (encoder.matches(oldPw, user.getPassword())) {
+                String password = encoder.encode(newPw);
+                user.setPassword(password);
+                this.userDao.update(user);
+            }
+            return new ResponseEntity<Integer>(HttpStatus.OK);
+        } catch (Exception e) {
+            logger.info("REST - Error updating user", e);
+        } finally {
+            logger.info("REST - End of updating the user");
+        }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

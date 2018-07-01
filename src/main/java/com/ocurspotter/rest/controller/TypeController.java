@@ -35,7 +35,7 @@ public class TypeController {
             List<Type> types = this.typeDao.getAll();
             List<TypeBean> typeBeans = new ArrayList<>();
             for (Type type : types){
-                typeBeans.add(new TypeBean(type.getId(), type.getName(), type.getDescription()));
+                typeBeans.add(new TypeBean(type.getId(), type.getName(), type.getDescription(), type.getAvatar()));
             }
             return new ResponseEntity<List<TypeBean>>(typeBeans, HttpStatus.OK);
         } catch (Exception e) {
@@ -51,7 +51,7 @@ public class TypeController {
         logger.info("REST - Getting type by id: " + id);
         try {
             Type type = this.typeDao.getById(id);
-            return new ResponseEntity<TypeBean>(new TypeBean(type.getId(), type.getName(), type.getDescription()), HttpStatus.OK);
+            return new ResponseEntity<TypeBean>(new TypeBean(type.getId(), type.getName(), type.getDescription(), type.getAvatar()), HttpStatus.OK);
         } catch (Exception e) {
             logger.info("REST - Error getting the type", e);
         } finally {

@@ -24,6 +24,9 @@ public class Type {
 	@Column(name = "description")
 	private String description;
 
+	@Column(name = "avatar")
+	private String avatar;
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "type")
 	private Set<Occurrence> occurrences = new HashSet<Occurrence>(0);
 
@@ -35,6 +38,14 @@ public class Type {
 	public Type(String name, String description, Set<Occurrence> occurrences, Set<User> userTypes) {
 		this.name = name;
 		this.description = description;
+		this.occurrences = occurrences;
+		this.userTypes = userTypes;
+	}
+
+	public Type(String name, String description, String avatar, Set<Occurrence> occurrences, Set<User> userTypes) {
+		this.name = name;
+		this.description = description;
+		this.avatar = avatar;
 		this.occurrences = occurrences;
 		this.userTypes = userTypes;
 	}
@@ -66,6 +77,10 @@ public class Type {
 	public void setUserTypes(Set<User> userTypes) {
 		this.userTypes = userTypes;
 	}
+
+	public String getAvatar() { return avatar; }
+
+	public void setAvatar(String avatar) { this.avatar = avatar; }
 
 	@Override
 	public int hashCode() {
