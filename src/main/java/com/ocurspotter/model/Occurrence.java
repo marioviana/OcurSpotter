@@ -82,7 +82,7 @@ public class Occurrence {
     public Occurrence(String title, String description, Type type, Double latitude, Double longitude, Boolean suggestion, User user, String image) {
 		this.title = title;
 		this.description = description;
-		this.status = false;
+		this.status = true;
 		this.openDate = new Date();
 		this.closeDate = null;
 		this.latitude = latitude;

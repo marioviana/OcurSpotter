@@ -256,4 +256,20 @@ public class OccurrenceController {
         }
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @RequestMapping(path="/occurrences/close", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> closeOccurrence(@RequestParam("id") Long id) {
+        logger.info("REST - Post close occurrence: ");
+        try {
+            Occurrence occurrence = this.occurrenceDao.getById(id);
+            occurrence.setStatus(false);
+            this.occurrenceDao.update(occurrence);
+            return new ResponseEntity<Integer>(200, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.info("REST - Error post close the occurrence", e);
+        } finally {
+            logger.info("REST - End of post close the occurrence");
+        }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

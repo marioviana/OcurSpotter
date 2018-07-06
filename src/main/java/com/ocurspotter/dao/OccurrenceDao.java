@@ -14,6 +14,13 @@ public interface OccurrenceDao {
 	void save(Occurrence occurrence);
 
 	/**
+	 * Update.
+	 *
+	 * @param occurrence the occurrence
+	 */
+	void update(Occurrence occurrence);
+
+	/**
 	 * Get by id.
 	 *
 	 * @param id the occurrence id

@@ -41,6 +41,22 @@ public class OccurrenceDaoImpl implements OccurrenceDao {
 	}
 
 	/**
+	 * Update.
+	 *
+	 * @param occurrence the occurrence
+	 */
+	public void update(Occurrence occurrence) {
+		logger.info("Start updating occurrence");
+		try {
+			sessionFactory.getCurrentSession().update(occurrence);
+		} catch (Exception e) {
+			logger.error("An error has occurred while updating an occurrence", e);
+		} finally {
+			logger.info("End updating occurrence");
+		}
+	}
+
+	/**
 	 * Get by id.
 	 *
 	 * @param id the occurrence id
